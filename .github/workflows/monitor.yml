@@ -1,0 +1,53 @@
+name: Monitor citas visa Japón
+
+on:
+  schedule:
+    # Cada 10 minutos. GitHub encola con retraso variable en horas pico,
+    # así que en la práctica es cada 10 a 20 minutos.
+    - cron: '*/10 * * * *'
+  workflow_dispatch:        # permite dispararlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write           # necesario para commitear estado.json
+
+concurrency:
+  group: monitor-visa
+  cancel-in-progress: false # nunca cortar una pasada a medias
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5      # si se cuelga, que no queme minutos
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Los runners de Ubuntu ya traen Python 3. No se instala nada:
+      # el script es solo librería estándar.
+
+      - name: Revisar calendario
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_PARA: ${{ secrets.EMAIL_PARA }}
+          EMAIL_DE: ${{ secrets.EMAIL_DE }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CONTACTO: ${{ secrets.CONTACTO }}
+          SEMANAS: ${{ vars.SEMANAS || '6' }}
+          SOLICITUDES: ${{ vars.SOLICITUDES || '1' }}
+          RECORDAR: ${{ vars.RECORDAR || '45' }}
+        run: python3 monitor.py check
+
+      - name: Guardar estado
+        # Corre incluso si el paso anterior falló, para no perder lo ya avisado
+        if: always()
+        run: |
+          git config user.name "monitor"
+          git config user.email "monitor@users.noreply.github.com"
+          git add estado.json 2>/dev/null || exit 0
+          git diff --staged --quiet && exit 0
+          git commit -m "estado $(date -u +%FT%TZ)"
+          git push || (git pull --rebase && git push)

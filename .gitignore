@@ -1,0 +1,9 @@
+# Artefactos locales, nunca al repo público
+files.zip
+monitor.log
+diagnostico.html
+__pycache__/
+*.pyc
+.DS_Store
+
+# estado.json SÍ se versiona: el workflow lo commitea entre pasadas.

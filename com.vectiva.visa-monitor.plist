@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.vectiva.visa-monitor</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>__RUTA__/monitor.py</string>
+        <string>check</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__RUTA__</string>
+
+    <!-- Cada 10 minutos -->
+    <key>StartInterval</key>
+    <integer>600</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- Correo. Con Gmail, SMTP_PASS es una contraseña de aplicación. -->
+        <key>SMTP_HOST</key>
+        <string>smtp.gmail.com</string>
+        <key>SMTP_PORT</key>
+        <string>587</string>
+        <key>SMTP_USER</key>
+        <string>__SMTP_USER__</string>
+        <key>SMTP_PASS</key>
+        <string>__SMTP_PASS__</string>
+        <key>EMAIL_PARA</key>
+        <string>__EMAIL_PARA__</string>
+
+        <!-- Telegram, opcional. Dejar vacío si no se usa. -->
+        <key>TELEGRAM_TOKEN</key>
+        <string>__TOKEN__</string>
+        <key>TELEGRAM_CHAT_ID</key>
+        <string>__CHAT_ID__</string>
+
+        <key>RECORDAR</key>
+        <string>45</string>
+        <key>SEMANAS</key>
+        <string>6</string>
+        <key>SOLICITUDES</key>
+        <string>1</string>
+        <key>ESTADO</key>
+        <string>__RUTA__/estado.json</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>__RUTA__/monitor.log</string>
+    <key>StandardErrorPath</key>
+    <string>__RUTA__/monitor.log</string>
+</dict>
+</plist>
