@@ -1,0 +1,23 @@
+name: Probar envío de correo
+
+# Solo a mano. No entra en el cron: esto manda un correo real.
+on:
+  workflow_dispatch:
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enviar correo de prueba
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_PARA: ${{ secrets.EMAIL_PARA }}
+          EMAIL_DE: ${{ secrets.EMAIL_DE }}
+        run: python3 probar_correo.py
