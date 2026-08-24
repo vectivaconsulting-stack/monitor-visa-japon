@@ -2,9 +2,11 @@ name: Monitor citas visa Japón
 
 on:
   schedule:
-    # Cada 10 minutos. GitHub encola con retraso variable en horas pico,
-    # así que en la práctica es cada 10 a 20 minutos.
-    - cron: '*/10 * * * *'
+    # Cada 10 minutos, pero desplazado de los minutos redondos. Los crons en
+    # :00, :10, :20 son los más disputados de GitHub y el planificador omite
+    # ejecuciones bajo carga; con este offset compiten contra muchos menos
+    # trabajos. Sigue siendo cada 10 min, el mínimo que admite el proyecto.
+    - cron: '3,13,23,33,43,53 * * * *'
   workflow_dispatch:        # permite dispararlo a mano desde la pestaña Actions
 
 permissions:
