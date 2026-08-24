@@ -7,3 +7,7 @@ __pycache__/
 .DS_Store
 
 # estado.json SÍ se versiona: el workflow lo commitea entre pasadas.
+
+# Montaje local de launchd: lleva correos y ruta absoluta, no va al repo público.
+estado_local.json
+*.plist.tpl
