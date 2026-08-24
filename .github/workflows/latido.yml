@@ -1,0 +1,30 @@
+name: Aviso de vida
+
+on:
+  schedule:
+    # 13:00 UTC = 8:00 a.m. en Colombia. Una vez al día.
+    - cron: '0 13 * * *'
+  workflow_dispatch:        # para probarlo sin esperar al día siguiente
+
+permissions:
+  actions: read             # leer el historial de corridas del monitor
+  contents: read
+
+jobs:
+  latido:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enviar aviso de vida
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_PARA: ${{ secrets.EMAIL_PARA }}
+          EMAIL_DE: ${{ secrets.EMAIL_DE }}
+        run: python3 latido.py
