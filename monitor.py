@@ -358,7 +358,9 @@ def enviar_correo(asunto: str, texto: str, html: str) -> bool:
                 s.starttls()
                 s.login(usuario, clave)
                 s.send_message(msg)
-        log.info("correo enviado a %s", ", ".join(destinos))
+        # Solo el conteo: los logs de Actions de un repo público son públicos,
+        # y GitHub no enmascara una dirección suelta dentro de EMAIL_PARA.
+        log.info("correo enviado a %d destinatario(s)", len(destinos))
         return True
     except (smtplib.SMTPException, OSError) as e:
         log.error("el correo falló: %s", e)
